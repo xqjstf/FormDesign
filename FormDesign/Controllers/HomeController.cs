@@ -15,21 +15,6 @@ namespace FormDesign.Controllers
         public ActionResult Index()
         {
             return View();
-        }
-
-        /// <summary>
-        /// 表单设计
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult Save()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Save(string content)
-        { 
-            return View();
-        }
+        } 
     }
 }
