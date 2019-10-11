@@ -14,3 +14,26 @@
     CKEDITOR.replace('content');
 </script>
 
+<script type="text/javascript">
+    var SelectItem;
+    $(function () {
+
+     
+ function GetSelectItem() {
+        $.ajax({
+            url: "@Url.Action("GetSelectItem")",
+            data: {},
+            type:"get",
+            async: false,
+            success: function (data) {
+               SelectItem=   data;
+            },
+            error: function (data) {
+                alert("数据获取出错，请稍后重试或联系管理员！");
+            }
+        })
+        }
+         GetSelectItem();
+    })
+
+</script>

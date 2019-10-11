@@ -15,6 +15,13 @@ namespace FormDesign.Controllers
         public ActionResult Index()
         {
             return View();
-        } 
+        }
+
+
+        public JsonResult GetSelectItem()
+        {
+            var arr = new string[] { "字段1", "字段2", "字段3" };
+            return Json(arr, JsonRequestBehavior.AllowGet);
+        }
     }
 }
