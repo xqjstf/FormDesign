@@ -74,7 +74,7 @@ CKEDITOR.dialog.add('textfield', function (editor) {
                     label: editor.lang.forms.textfield.name,
                     'default': '',
                     accessKey: 'N',
-                    items: SelectItem,
+                    items: SelectItem, 
                     setup: function (element) {
                         this.setValue(element.data('cke-saved-name') || element.getAttribute('name') || '');
                     },

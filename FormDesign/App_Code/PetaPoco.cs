@@ -38,7 +38,7 @@ namespace PetaPoco
     /// <summary>
     ///     The main PetaPoco Database class.  You can either use this class directly, or derive from it.
     /// </summary>
-    public class Database : IDatabase
+    class Database : IDatabase
     {
         #region IDisposable
 
@@ -2657,7 +2657,7 @@ namespace PetaPoco
     /// <summary>
     ///     A helper class which enables fluent configuration.
     /// </summary>
-    public class DatabaseConfiguration : IDatabaseBuildConfiguration, IBuildConfigurationSettings, IHideObjectMethods
+    class DatabaseConfiguration : IDatabaseBuildConfiguration, IBuildConfigurationSettings, IHideObjectMethods
     {
         private readonly IDictionary<string, object> _settings = new Dictionary<string, object>();
 
@@ -4219,7 +4219,7 @@ namespace PetaPoco
 
 	 */
 
-    public class OracleProvider : DbProviderFactory
+    class OracleProvider : DbProviderFactory
     {
         private const string _assemblyName = "Oracle.DataAccess";
         private const string _connectionTypeName = "Oracle.DataAccess.Client.OracleConnection";
@@ -4301,7 +4301,7 @@ namespace PetaPoco
     ///     supply the DB column name.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class ColumnAttribute : Attribute
+    class ColumnAttribute : Attribute
     {
         /// <summary>
         ///     The SQL name of the column
@@ -4354,7 +4354,7 @@ namespace PetaPoco
     ///     <seealso cref="ColumnAttribute" /> or <seealso cref="ResultColumnAttribute" />.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class ExplicitColumnsAttribute : Attribute
+    class ExplicitColumnsAttribute : Attribute
     {
     }
 
@@ -4364,7 +4364,7 @@ namespace PetaPoco
     ///     ignores the column.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class IgnoreAttribute : Attribute
+    class IgnoreAttribute : Attribute
     {
     }
 
@@ -4374,7 +4374,7 @@ namespace PetaPoco
     ///     the column is auto incrementing and the optional sequence name for Oracle sequence columns.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class PrimaryKeyAttribute : Attribute
+    class PrimaryKeyAttribute : Attribute
     {
         /// <summary>
         ///     The column name.
@@ -4417,7 +4417,7 @@ namespace PetaPoco
     ///     column that is only populated in queries and is not used for updates or inserts operations.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class ResultColumnAttribute : ColumnAttribute
+    class ResultColumnAttribute : ColumnAttribute
     {
         /// <summary>
         ///     Constructs a new instance of the <seealso cref="ResultColumnAttribute" />.
@@ -4441,7 +4441,7 @@ namespace PetaPoco
     ///     Represents an attribute, which when applied to a Poco class, specifies the the DB table name which it maps to
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class TableNameAttribute : Attribute
+    class TableNameAttribute : Attribute
     {
         /// <summary>
         ///     The table nane of the database that this entity maps to.
@@ -4486,7 +4486,7 @@ namespace PetaPoco
     /// <summary>
     ///     Wrap strings in an instance of this class to force use of DBType.AnsiString
     /// </summary>
-    public class AnsiString
+    class AnsiString
     {
         /// <summary>
         ///     The string value
@@ -4511,7 +4511,7 @@ namespace PetaPoco
     ///     Typically ColumnInfo is automatically populated from the attributes on a POCO object and it's properties. It can
     ///     however also be returned from the IMapper interface to provide your owning bindings between the DB and your POCOs.
     /// </remarks>
-    public class ColumnInfo
+    class ColumnInfo
     {
         /// <summary>
         ///     The SQL name of the column
@@ -4601,7 +4601,7 @@ namespace PetaPoco
     ///     By default this mapper replaces <see cref="StandardMapper" /> without change, which means backwards compatibility
     ///     is kept.
     /// </remarks>
-    public class ConventionMapper : IMapper
+    class ConventionMapper : IMapper
     {
         /// <summary>
         ///     Gets or sets the get sequence name logic.
@@ -5164,7 +5164,7 @@ namespace PetaPoco
     }
 
 
-    public class GridReader : IGridReader
+    class GridReader : IGridReader
     {
         private IDataReader _reader;
         private IDbCommand _command;
@@ -5972,7 +5972,7 @@ namespace PetaPoco
     ///     Holds the results of a paged request.
     /// </summary>
     /// <typeparam name="T">The type of Poco in the returned result set</typeparam>
-    public class Page<T>
+    class Page<T>
     {
         /// <summary>
         ///     The current page number contained in this page of result set
@@ -6006,7 +6006,7 @@ namespace PetaPoco
     }
 
 
-    public class PocoColumn
+    class PocoColumn
     {
         public string ColumnName;
         public bool ForceToUtc;
@@ -6036,7 +6036,7 @@ namespace PetaPoco
     }
 
 
-    public class PocoData
+    class PocoData
     {
         private static Cache<Type, PocoData> _pocoDatas = new Cache<Type, PocoData>();
         private static List<Func<object, object>> _converters = new List<Func<object, object>>();
@@ -6435,7 +6435,7 @@ namespace PetaPoco
     /// <summary>
     ///     A simple helper class for build SQL statements
     /// </summary>
-    public class Sql
+    class Sql
     {
         private object[] _args;
         private object[] _argsFinal;
@@ -6671,7 +6671,7 @@ namespace PetaPoco
         /// <summary>
         ///     The SqlJoinClause is a simple helper class used in the construction of SQL JOIN statements with the SQL builder
         /// </summary>
-        public class SqlJoinClause
+        class SqlJoinClause
         {
             private readonly Sql _sql;
 
@@ -6697,7 +6697,7 @@ namespace PetaPoco
     /// <summary>
     ///     StandardMapper is the default implementation of IMapper used by PetaPoco
     /// </summary>
-    public class StandardMapper : IMapper
+    class StandardMapper : IMapper
     {
         /// <summary>
         ///     Get information about the table associated with a POCO class
@@ -6757,7 +6757,7 @@ namespace PetaPoco
     /// <summary>
     ///     Use by IMapper to override table bindings for an object
     /// </summary>
-    public class TableInfo
+    class TableInfo
     {
         /// <summary>
         ///     The database table name
@@ -6826,7 +6826,7 @@ namespace PetaPoco
     /// <summary>
     ///     Transaction object helps maintain transaction depth counts
     /// </summary>
-    public class Transaction : ITransaction
+    class Transaction : ITransaction
     {
         private Database _db;
 
@@ -6854,7 +6854,7 @@ namespace PetaPoco
     ///     Author: Originally written (I believe) by Andrew Peters
     ///     Source: Scott Kirkland (https://github.com/srkirkland/Inflector)
     /// </summary>
-    public class EnglishInflector : IInflector
+    class EnglishInflector : IInflector
     {
         private static readonly List<Rule> Plurals = new List<Rule>();
 
@@ -7417,7 +7417,7 @@ namespace PetaPoco
     }
 
 
-    public class FirebirdDbDatabaseProvider : DatabaseProvider
+    class FirebirdDbDatabaseProvider : DatabaseProvider
     {
         public override DbProviderFactory GetFactory()
         {
@@ -7449,7 +7449,7 @@ namespace PetaPoco
     }
 
 
-    public class MariaDbDatabaseProvider : DatabaseProvider
+    class MariaDbDatabaseProvider : DatabaseProvider
     {
         public override DbProviderFactory GetFactory()
         {
@@ -7477,7 +7477,7 @@ namespace PetaPoco
     }
 
 
-    public class MsAccessDbDatabaseProvider : DatabaseProvider
+    class MsAccessDbDatabaseProvider : DatabaseProvider
     {
         public override DbProviderFactory GetFactory()
         {
@@ -7498,7 +7498,7 @@ namespace PetaPoco
     }
 
 
-    public class MySqlDatabaseProvider : DatabaseProvider
+    class MySqlDatabaseProvider : DatabaseProvider
     {
         public override DbProviderFactory GetFactory()
         {
@@ -7525,7 +7525,7 @@ namespace PetaPoco
     }
 
 
-    public class OracleDatabaseProvider : DatabaseProvider
+    class OracleDatabaseProvider : DatabaseProvider
     {
         public override string GetParameterPrefix(string connectionString)
         {
@@ -7591,7 +7591,7 @@ namespace PetaPoco
     }
 
 
-    public class PostgreSQLDatabaseProvider : DatabaseProvider
+    class PostgreSQLDatabaseProvider : DatabaseProvider
     {
         public override bool HasNativeGuidSupport
         {
@@ -7638,7 +7638,7 @@ namespace PetaPoco
     }
 
 
-    public class SQLiteDatabaseProvider : DatabaseProvider
+    class SQLiteDatabaseProvider : DatabaseProvider
     {
         public override DbProviderFactory GetFactory()
         {
@@ -7674,7 +7674,7 @@ namespace PetaPoco
     }
 
 
-    public class SqlServerCEDatabaseProviders : DatabaseProvider
+    class SqlServerCEDatabaseProviders : DatabaseProvider
     {
         public override DbProviderFactory GetFactory()
         {
@@ -7698,7 +7698,7 @@ namespace PetaPoco
     }
 
 
-    public class SqlServerDatabaseProvider : DatabaseProvider
+    class SqlServerDatabaseProvider : DatabaseProvider
     {
         public override DbProviderFactory GetFactory()
         {
@@ -7929,7 +7929,7 @@ namespace PetaPoco
     }
 
 
-    public class PagingHelper : IPagingHelper
+    class PagingHelper : IPagingHelper
     {
         public Regex RegexColumns = new Regex(@"\A\s*SELECT\s+((?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|.)*?)(?<!,\s+)\bFROM\b",
             RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);

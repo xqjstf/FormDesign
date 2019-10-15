@@ -1,68 +1,124 @@
 ﻿using FormDesign.Models;
+using PetaPoco;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web.Mvc;
 
-namespace FormDesign.Controllers
+namespace FormDesign
 {
-    public class HomeController : Controller
+    class FormDesignService : IFormDesignService
     {
-        /// <summary>
-        /// 表单列表
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult Index()
+        private IFormDesignService _IFormDesign;
+        private Database DB;
+        public FormDesignService(string connectionStringName)
         {
-            return View();
+            _IFormDesign = new FormDesignService(connectionStringName);
+            DB = new Database(connectionStringName);
         }
-
-
-        public JsonResult GetSelectItem()
+        public FormDesignService(string connectionString, string providerName)
         {
-            char[][] arr = new char[4][];// 创建一个4行的二维数组
-            arr[0] = new char[] { '春', '眠' };// 为每一行赋值
-            arr[1] = new char[] { '处', '处' };
-            arr[2] = new char[] { '夜', '来' };
-            arr[3] = new char[] { '花', '落' };
-
-            return Json(arr, JsonRequestBehavior.AllowGet);
+            _IFormDesign = new FormDesignService(connectionString, providerName);
+            DB = new Database(connectionString, providerName);
         }
-
 
         #region 表单模板
-        public ActionResult FormTemplate()
+        /// <summary>
+        /// 表单模板
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public FormTemplate GetFormTemplate(int id)
         {
-            return View();
+            return DB.FirstOrDefault<FormTemplate>("Id=@0", id);
+        }
+        /// <summary>
+        /// 表单模板分页列表
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public Page<FormTemplate> GetFormTemplatePage(int pageIndex, int pageSize)
+        {
+            Sql sql = new Sql();
+            return DB.Page<FormTemplate>(pageIndex, pageSize, sql);
         }
         #endregion
 
         #region 字段模板
-        public ActionResult FieldTemplate()
+        /// <summary>
+        /// 字段模板
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public FieldTemplate FieldTemplate(int id)
         {
-            return View();
+            return DB.FirstOrDefault<FieldTemplate>("Id=@0", id);
+        }
+        /// <summary>
+        /// 字段模板分页列表
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public Page<FieldTemplate> GetFieldTemplatePage(int pageIndex, int pageSize)
+        {
+            Sql sql = new Sql();
+            return DB.Page<FieldTemplate>(pageIndex, pageSize, sql);
         }
         #endregion
 
         #region 字段配置
-        public ActionResult FieldConfig()
+        /// <summary>
+        /// 字段配置
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public FieldConfig FieldConfig(int id)
         {
-            return View();
+            return DB.FirstOrDefault<FieldConfig>("Id=@0", id);
+        }
+        /// <summary>
+        /// 字段配置分页列表
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public Page<FieldConfig> GetFieldConfigPage(int pageIndex, int pageSize)
+        {
+            Sql sql = new Sql();
+            return DB.Page<FieldConfig>(pageIndex, pageSize, sql);
         }
         #endregion
 
         #region 表单配置
-        public ActionResult FormConfig()
+        /// <summary>
+        /// 表单配置
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public FormConfig FormConfig(int id)
         {
-            return View();
+            return DB.FirstOrDefault<FormConfig>("Id=@0", id);
         }
+        /// <summary>
+        /// 表单配置分页列表
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public Page<FormConfig> GetFormConfigPage(int pageIndex, int pageSize)
+        {
+            Sql sql = new Sql();
+            return DB.Page<FormConfig>(pageIndex, pageSize, sql);
+        }
+        #endregion
 
         /// <summary>
         /// 表单预览
         /// </summary>
         /// <returns></returns>
-        public ActionResult FormConfigPreview()
+        public string FormConfigPreview()
         {
             FormConfig config = new FormConfig();
             config.Id = 1;
@@ -296,6 +352,6 @@ namespace FormDesign.Controllers
             sbHtml.AppendLine(ft.Content.Replace("<formContent></formContent>", Convert.ToString(sbHdFildHtml) + Convert.ToString(sbFildHtml)));
             return Content(sbHtml.ToString());
         }
-        #endregion
+#endregion
     }
 }
