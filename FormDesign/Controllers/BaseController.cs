@@ -9,6 +9,15 @@ namespace FormDesign.Controllers
 {
     public class BaseController : Controller
     {
+
+        public static int PageSize
+        {
+            get
+            {
+                return int.Parse(System.Configuration.ConfigurationManager.AppSettings["PageSize"]);
+            }
+        } 
+
         /// <summary>
         /// Layer弹窗
         /// </summary>

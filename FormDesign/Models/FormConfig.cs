@@ -8,7 +8,7 @@ namespace FormDesign.Models
     /// <summary>
     /// 表单配置信息
     /// </summary>
-    class FormConfig
+    public class FormConfig
     {
         public int Id { get; set; }
 

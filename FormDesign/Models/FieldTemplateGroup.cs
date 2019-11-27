@@ -8,7 +8,7 @@ namespace FormDesign.Models
     /// <summary>
     ///字段模板组
     /// </summary>
-    class FieldTemplateGroup
+    public class FieldTemplateGroup
     {
 
         public int Id { get; set; }

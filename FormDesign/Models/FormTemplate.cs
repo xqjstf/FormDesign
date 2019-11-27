@@ -8,10 +8,14 @@ namespace FormDesign.Models
     /// <summary>
     /// 表单模板
     /// </summary>
-    class FormTemplate
+    public class FormTemplate
     {
         public int Id { get; set; }
 
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Name { get; set; }
         /// <summary>
         /// 内容
         /// </summary>
@@ -20,6 +24,6 @@ namespace FormDesign.Models
         /// <summary>
         /// 样式
         /// </summary>
-        public string Style { get; set; } 
+        public string Style { get; set; }
     }
 }

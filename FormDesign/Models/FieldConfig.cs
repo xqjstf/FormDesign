@@ -8,7 +8,7 @@ namespace FormDesign.Models
     /// <summary>
     /// 字段配置信息
     /// </summary>
-    class FieldConfig
+    public class FieldConfig
     {
         public int Id { get; set; }
 
@@ -36,7 +36,7 @@ namespace FormDesign.Models
         /// <summary>
         /// 字段模板Id
         /// </summary>
-        public int FieldTemplateId { get; set; }
+        public int? FieldTemplateId { get; set; }
 
         /// <summary>
         /// 字段长度

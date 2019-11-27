@@ -8,7 +8,7 @@ namespace FormDesign.Models
     /// <summary>
     /// 字段类型
     /// </summary>
-    enum EmFieldType
+ public   enum EmFieldType
     {
         Text,
         Radio,

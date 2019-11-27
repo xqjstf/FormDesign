@@ -9,7 +9,7 @@ namespace FormDesign.Controllers
 {
     public class HomeController : BaseController
     {
-        private FormDesignService _IFormDesign = new FormDesignService();
+        private IFormDesignService _IFormDesign = new FormDesignService();
 
         /// <summary>
         /// 表单列表
@@ -21,23 +21,114 @@ namespace FormDesign.Controllers
         }
 
         #region 表单模板
-        public ActionResult FormTemplate()
+        public ActionResult FormTemplate(int page = 1)
         {
-            return View();
+            return View(_IFormDesign.GetFormTemplate(page, PageSize));
+        }
+        public ActionResult SaveFormTemplate(int? id)
+        {
+            FormTemplate model = null;
+            if (id.HasValue)
+            {
+                model = _IFormDesign.GetFormTemplate(id.Value);
+                if (model == null)
+                {
+                    return Alert("表单模板不存在！");
+                }
+            }
+            else
+            {
+                model = new Models.FormTemplate();
+            } 
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult SaveFormTemplate(FormTemplate model)
+        {
+            _IFormDesign.Save<FormTemplate>(model);
+            return Alert("数据保存成功！", Url.Action("FormTemplate"));
+        }
+
+        public ActionResult DelFormTemplate(int id)
+        {
+            _IFormDesign.Delete<FormTemplate>(id);
+            return Alert("删除成功！", Url.Action("FormTemplate"));
         }
         #endregion
 
         #region 字段模板
-        public ActionResult FieldTemplate()
+        public ActionResult FieldTemplate(int page = 1)
         {
-            return View();
+            return View(_IFormDesign.GetFieldTemplate(page, PageSize));
+        }
+        public ActionResult SaveFieldTemplate(int? id)
+        {
+            FieldTemplate model = null;
+            if (id.HasValue)
+            {
+                model = _IFormDesign.GetFieldTemplate(id.Value);
+                if (model == null)
+                {
+                    return Alert("表单模板不存在！");
+                }
+            }
+            else
+            {
+                model = new FieldTemplate();
+            }
+            ViewData["GroupId"] = new SelectList(FormDesign.Models.FieldTemplate.FieldTemplateGroup, "key", "value", model.GroupId);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult SaveFieldTemplate(FieldTemplate model)
+        {
+            _IFormDesign.Save<FieldTemplate>(model);
+            return Alert("数据保存成功！", Url.Action("FieldTemplate"));
+        }
+
+        public ActionResult DelFieldTemplate(int id)
+        {
+            _IFormDesign.Delete<FieldTemplate>(id);
+            return Alert("删除成功！", Url.Action("FieldTemplate"));
         }
         #endregion
 
         #region 字段配置
-        public ActionResult FieldConfig()
+        public ActionResult FieldConfig(int page = 1)
         {
-            return View();
+            return View(_IFormDesign.GetFieldConfig(page, PageSize));
+        }
+        public ActionResult SaveFieldConfig(int? id)
+        {
+            FieldConfig model = null;
+            if (id.HasValue)
+            {
+                model = _IFormDesign.GetFieldConfig(id.Value);
+                if (model == null)
+                {
+                    return Alert("表单模板不存在！");
+                }
+            }
+            else
+            {
+                model = new Models.FieldConfig();
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult SaveFieldConfig(FieldConfig model)
+        {
+            _IFormDesign.Save<FieldConfig>(model);
+            return Alert("数据保存成功！", Url.Action("FieldTemplate"));
+        }
+
+        public ActionResult DelFieldConfig(int id)
+        {
+            _IFormDesign.Delete<FieldConfig>(id);
+            return Alert("删除成功！", Url.Action("FieldTemplate"));
         }
         #endregion
 

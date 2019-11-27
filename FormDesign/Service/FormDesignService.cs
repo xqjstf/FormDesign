@@ -7,16 +7,8 @@ using System.Text;
 
 namespace FormDesign
 {
-    class FormDesignService : IFormDesignService
+    class FormDesignService : BaseService, IFormDesignService
     {
-        public Database DB
-        {
-            get
-            {
-                return new Database("DeafuleConn");
-            }
-        }
-
         #region 表单模板
         /// <summary>
         /// 表单模板
@@ -33,12 +25,11 @@ namespace FormDesign
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public Page<FormTemplate> GetFormTemplatePage(int pageIndex, int pageSize)
+        public Page<FormTemplate> GetFormTemplate(int pageIndex, int pageSize)
         {
             Sql sql = new Sql();
             return DB.Page<FormTemplate>(pageIndex, pageSize, sql);
         }
-
         #endregion
 
         #region 字段模板
@@ -59,7 +50,7 @@ namespace FormDesign
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public Page<FieldTemplateGroup> GetFieldTemplateGroupPage(int pageIndex, int pageSize)
+        public Page<FieldTemplateGroup> GetFieldTemplateGroup(int pageIndex, int pageSize)
         {
             Sql sql = new Sql();
             return DB.Page<FieldTemplateGroup>(pageIndex, pageSize, sql);
@@ -90,7 +81,7 @@ namespace FormDesign
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public Page<FieldTemplate> GetFieldTemplatePage(int pageIndex, int pageSize)
+        public Page<FieldTemplate> GetFieldTemplate(int pageIndex, int pageSize)
         {
             Sql sql = new Sql();
             return DB.Page<FieldTemplate>(pageIndex, pageSize, sql);
@@ -122,7 +113,7 @@ namespace FormDesign
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public Page<FieldConfig> GetFieldConfigPage(int pageIndex, int pageSize)
+        public Page<FieldConfig> GetFieldConfig(int pageIndex, int pageSize)
         {
             Sql sql = new Sql();
             return DB.Page<FieldConfig>(pageIndex, pageSize, sql);
@@ -145,7 +136,7 @@ namespace FormDesign
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public Page<FormConfig> GetFormConfigPage(int pageIndex, int pageSize)
+        public Page<FormConfig> GetFormConfig(int pageIndex, int pageSize)
         {
             Sql sql = new Sql();
             return DB.Page<FormConfig>(pageIndex, pageSize, sql);
