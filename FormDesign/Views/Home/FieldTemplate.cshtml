@@ -1,4 +1,4 @@
-﻿@model PetaPoco.Page<FieldTemplate>
+﻿@model PetaPoco.Page<V_FieldTemplate>
 @{
     ViewBag.Title = "字段模板";
 }
@@ -16,24 +16,20 @@
             <thead>
                 <tr>
                     <th>名称</th>
-                    <th>组别</th>
-                    <th>所需字段数</th>
+                    <th>组别</th> 
                     <th>操作</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (FieldTemplate item in Model.Items)
+                @foreach (V_FieldTemplate item in Model.Items)
                 {
                     <tr>
                         <td>
                             <a href="@Url.Action("SaveFieldTemplate",new { id=item.Id})">@item.Name</a>
                         </td>
                         <td>
-                            @FieldTemplate.FieldTemplateGroup[item.GroupId.GetValueOrDefault(0)]
-                        </td>
-                        <td>
-                            @item.FieldCount
-                        </td>
+                            @item.GroupName 
+                        </td> 
                         <td>
                             <a href="@Url.Action("DelFieldTemplate",new { id=item.Id})">删除</a>
                         </td>

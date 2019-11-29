@@ -17,9 +17,18 @@
         <table class="table table-striped  table-hover">
             <thead>
                 <tr>
+                    <th>字段</th>
                     <th>名称</th>
-                    <th>内容</th>
-                    <th>所需字段数</th>
+                    <th>表名称</th>
+                    <th>主键</th>
+                    <th>类型</th>
+                    <th>长度</th>
+                    <th>必填</th>
+                    <th>模板</th>
+                    <th>序号</th>
+                    <th>正则</th>
+                    <th>默认值</th>
+                    <th>状态</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -28,16 +37,43 @@
                 {
                     <tr>
                         <td>
-                            <a href="@Url.Action("SaveFieldTemplate",new { id=item.Id})">@item.Name</a>
+                            <a href="@Url.Action("SaveFieldTemplate", new { id = item.Id })">@item.Field</a>
                         </td>
                         <td>
-                            @item.Content
+                            @item.FieldLable
                         </td>
                         <td>
-                            @item.FieldCount
+                            @item.TableName
                         </td>
                         <td>
-                            <a href="@Url.Action("DelFieldTemplate",new { id=item.Id})">删除</a>
+                            @(item.IsPrimaryKey.Value ? "是" : "否")
+                        </td>
+                        <td>
+                            @item.FieldType
+                        </td>
+                        <td>
+                            @item.FieldLength
+                        </td>
+                        <td>
+                            @(item.IsRequired.Value ? "是" : "否")
+                        </td>
+                        <td>
+                            @item.FieldTemplateId
+                        </td>
+                        <td>
+                            @item.Seq
+                        </td>
+                        <td>
+                            @item.RegExpression
+                        </td>
+                        <td>
+                            @item.DeafultValue
+                        </td>
+                        <td>
+                            @(item.IsEnabled.Value ? "启用" : "禁用")
+                        </td>
+                        <td>
+                            <a href="@Url.Action("DelFieldConfig",new { id=item.Id})">删除</a>
                         </td>
                     </tr>
                 }

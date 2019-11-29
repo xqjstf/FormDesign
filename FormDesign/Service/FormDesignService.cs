@@ -19,6 +19,15 @@ namespace FormDesign
         {
             return DB.FirstOrDefault<FormTemplate>("Where Id=@0", id);
         }
+
+        /// <summary>
+        /// 表单模板
+        /// </summary> 
+        /// <returns></returns>
+        public IList<FormTemplate> GetFormTemplate()
+        {
+            return DB.Fetch<FormTemplate>("SELECT *  FROM  FormTemplate ORDER BY  Name");
+        }
         /// <summary>
         /// 表单模板分页列表
         /// </summary>
@@ -42,6 +51,15 @@ namespace FormDesign
         public FieldTemplateGroup GetFieldTemplateGroup(int id)
         {
             return DB.FirstOrDefault<FieldTemplateGroup>("Where Id=@0", id);
+        }
+
+        /// <summary>
+        /// 字段组模板
+        /// </summary> 
+        /// <returns></returns>
+        public IList<FieldTemplateGroup> GetFieldTemplateGroup()
+        {
+            return DB.Fetch<FieldTemplateGroup>("SELECT *  FROM  FieldTemplateGroup ORDER BY  Name");
         }
 
         /// <summary>
@@ -81,10 +99,17 @@ namespace FormDesign
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public Page<FieldTemplate> GetFieldTemplate(int pageIndex, int pageSize)
+        public Page<V_FieldTemplate> GetFieldTemplate(int pageIndex, int pageSize)
         {
             Sql sql = new Sql();
-            return DB.Page<FieldTemplate>(pageIndex, pageSize, sql);
+            sql.Append(@"SELECT  a.* ,
+                            (SELECT    a1.Name
+                              FROM      dbo.FieldTemplateGroup a1
+                              WHERE     a1.id = a.GroupId
+                            ) GroupName
+                    FROM    FieldTemplate a");
+            sql.OrderBy("a.Id");
+            return DB.Page<V_FieldTemplate>(pageIndex, pageSize, sql);
         }
         #endregion
 
@@ -108,6 +133,14 @@ namespace FormDesign
             return DB.Fetch<FieldConfig>("Where TableName=@0", tableName);
         }
         /// <summary>
+        /// 获取在字段配置中存在的表名
+        /// </summary>
+        /// <returns></returns>
+        public IList<string> GetFieldConfigGroupTableName()
+        {
+            return DB.Fetch<string>("SELECT TableName  FROM  FieldConfig group BY  TableName ORDER BY TableName"); 
+        }
+        /// <summary>
         /// 字段配置分页列表
         /// </summary>
         /// <param name="pageIndex"></param>
@@ -116,6 +149,11 @@ namespace FormDesign
         public Page<FieldConfig> GetFieldConfig(int pageIndex, int pageSize)
         {
             Sql sql = new Sql();
+            sql.Append(@"SELECT  a.*
+                        FROM    dbo.FieldConfig a
+                        ORDER BY a.TableName,
+                                a.Seq ,
+                                a.Field");
             return DB.Page<FieldConfig>(pageIndex, pageSize, sql);
         }
         #endregion
@@ -136,10 +174,21 @@ namespace FormDesign
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public Page<FormConfig> GetFormConfig(int pageIndex, int pageSize)
+        public Page<V_FormConfig> GetFormConfig(int pageIndex, int pageSize)
         {
             Sql sql = new Sql();
-            return DB.Page<FormConfig>(pageIndex, pageSize, sql);
+            sql.Append(@"SELECT  a.* ,
+                                (SELECT    a1.Name
+                                  FROM      dbo.FormTemplate a1
+                                  WHERE     a1.id = a.FormTemplateId
+                                ) FormTemplateName,
+                                (SELECT    a1.Name
+                                  FROM      dbo.FieldTemplateGroup a1
+                                  WHERE     a1.id = a.FieldTemplateGroupId
+                                ) FieldTemplateGroupName
+                        FROM    FormConfig a ");
+            sql.OrderBy("a.Id");
+            return DB.Page<V_FormConfig>(pageIndex, pageSize, sql);
         }
         #endregion
     }

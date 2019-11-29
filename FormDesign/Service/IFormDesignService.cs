@@ -17,6 +17,13 @@ namespace FormDesign
         /// <param name="id"></param>
         /// <returns></returns>
         FormTemplate GetFormTemplate(int id);
+
+        /// <summary>
+        /// 表单模板
+        /// </summary> 
+        /// <returns></returns>
+        IList<FormTemplate> GetFormTemplate();
+
         /// <summary>
         /// 表单模板分页列表
         /// </summary>
@@ -35,6 +42,12 @@ namespace FormDesign
         /// <returns></returns>
         FieldTemplateGroup GetFieldTemplateGroup(int id);
 
+        /// <summary>
+        /// 字段组模板
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        IList<FieldTemplateGroup> GetFieldTemplateGroup();
         /// <summary>
         /// 字段组模板分页列表
         /// </summary>
@@ -61,7 +74,7 @@ namespace FormDesign
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Page<FieldTemplate> GetFieldTemplate(int pageIndex, int pageSize);
+        Page<V_FieldTemplate> GetFieldTemplate(int pageIndex, int pageSize);
         #endregion
 
         #region 字段配置
@@ -77,6 +90,13 @@ namespace FormDesign
         /// <param name="tableName"></param>
         /// <returns></returns>
         IList<FieldConfig> GetFieldConfigByTableName(string tableName);
+
+        /// <summary>
+        /// 获取在字段配置中存在的表名
+        /// </summary>
+        /// <returns></returns>
+        IList<string> GetFieldConfigGroupTableName();
+
         /// <summary>
         /// 字段配置分页列表
         /// </summary>
@@ -99,7 +119,7 @@ namespace FormDesign
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Page<FormConfig> GetFormConfig(int pageIndex, int pageSize);
+        Page<V_FormConfig> GetFormConfig(int pageIndex, int pageSize);
         #endregion
     }
 }

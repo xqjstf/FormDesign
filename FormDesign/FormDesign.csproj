@@ -159,6 +159,8 @@
     <Content Include="Views\Home\FieldTemplate.cshtml" />
     <Content Include="Views\Home\SaveFieldTemplate.cshtml" />
     <Content Include="Views\Home\FieldConfig.cshtml" />
+    <Content Include="Views\Home\FormConfig.cshtml" />
+    <Content Include="Views\Home\SaveFormConfig.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

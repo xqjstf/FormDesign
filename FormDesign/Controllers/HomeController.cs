@@ -39,10 +39,10 @@ namespace FormDesign.Controllers
             else
             {
                 model = new Models.FormTemplate();
-            } 
+            }
             return View(model);
         }
-
+        [ValidateInput(false)]
         [HttpPost]
         public ActionResult SaveFormTemplate(FormTemplate model)
         {
@@ -77,11 +77,12 @@ namespace FormDesign.Controllers
             {
                 model = new FieldTemplate();
             }
-            ViewData["GroupId"] = new SelectList(FormDesign.Models.FieldTemplate.FieldTemplateGroup, "key", "value", model.GroupId);
+            ViewData["GroupId"] = new SelectList(_IFormDesign.GetFieldTemplateGroup(), "Id", "Name", model.GroupId);
             return View(model);
         }
 
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult SaveFieldTemplate(FieldTemplate model)
         {
             _IFormDesign.Save<FieldTemplate>(model);
@@ -133,11 +134,42 @@ namespace FormDesign.Controllers
         #endregion
 
         #region 表单配置
-        public ActionResult FormConfig()
+        public ActionResult FormConfig(int page = 1)
         {
-            return View();
+            return View(_IFormDesign.GetFormConfig(page, PageSize));
+        }
+        public ActionResult SaveFormConfig(int? id)
+        {
+            FormConfig model = null;
+            if (id.HasValue)
+            {
+                model = _IFormDesign.GetFormConfig(id.Value);
+                if (model == null)
+                {
+                    return Alert("表单配置不存在！");
+                }
+            }
+            else
+            {
+                model = new FormConfig();
+            }
+            ViewBag.TableName = _IFormDesign.GetFieldConfigGroupTableName();
+            ViewData["FieldTemplateGroupId"] = new SelectList(_IFormDesign.GetFieldTemplateGroup(), "Id", "Name", model.FieldTemplateGroupId);
+            ViewData["FormTemplateId"] = new SelectList(_IFormDesign.GetFormTemplate(), "Id", "Name", model.FormTemplateId);            
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult SaveFormConfig(FormConfig model)
+        {
+            _IFormDesign.Save<FormConfig>(model);
+            return Alert("数据保存成功！", Url.Action("FormConfig"));
         }
 
+        public ActionResult DelFormConfig(int id)
+        {
+            _IFormDesign.Delete<FormConfig>(id);
+            return Alert("删除成功！", Url.Action("FormConfig"));
+        }
         #endregion
 
         #region 表单预览
@@ -187,89 +219,87 @@ namespace FormDesign.Controllers
             StringBuilder sbHdFildHtml = new StringBuilder();
             StringBuilder sbFildHtml = new StringBuilder();
 
-            for (int i = 0; i < fcList.Count; i++)
-            {
+            //for (int i = 0; i < fcList.Count; i++)
+            //{
 
-                if (fcList[i].FieldType == (int)EmFieldType.Hidden)
-                {
-                    sbHdFildHtml.AppendLine("<input type='hidden' name='" + fcList[i].Field + "'>");
-                    continue;
-                }
-                else
-                {
-                    var ftp = ftList.FirstOrDefault(p => p.Id == fcList[i].FieldTemplateId);
-                    if (ftp == null)
-                    {
-                        return Alert(string.Format("{0}下的{1}字段模板不存在", fcList[i].TableName, fcList[i].Field));
-                    }
-                    var currentFiledCount = fcList.Count - (ftp.FieldCount + i);
-                    if (currentFiledCount < 0) //如果剩余字段不够填充
-                    {
-                        ftp = ftList.FirstOrDefault(p => p.FieldCount == (ftp.FieldCount - 1));
-                        if (ftp == null)
-                        {
-                            return Content("<script>alert('请配置字段个数为" + currentFiledCount + "的字段模板！')</script>");
-                        }
-                    }
-                    sbFildHtml.AppendLine(ftp.Content);
-
-
+            //    if (fcList[i].FieldType == (int)EmFieldType.Hidden)
+            //    {
+            //        sbHdFildHtml.AppendLine("<input type='hidden' name='" + fcList[i].Field + "'>");
+            //        continue;
+            //    }
+            //    else
+            //    {
+            //        var ftp = ftList.FirstOrDefault(p => p.Id == fcList[i].FieldTemplateId);
+            //        if (ftp == null)
+            //        {
+            //            return Alert(string.Format("{0}下的{1}字段模板不存在", fcList[i].TableName, fcList[i].Field));
+            //        }
+            //        var currentFiledCount = fcList.Count - (ftp.FieldCount + i);
+            //        if (currentFiledCount < 0) //如果剩余字段不够填充
+            //        {
+            //            ftp = ftList.FirstOrDefault(p => p.FieldCount == (ftp.FieldCount - 1));
+            //            if (ftp == null)
+            //            {
+            //                return Content("<script>alert('请配置字段个数为" + currentFiledCount + "的字段模板！')</script>");
+            //            }
+            //        }
+            //        sbFildHtml.AppendLine(ftp.Content);
 
 
-                    //模板字段内容处理 
-                    string fildContent = null;
-                    for (int j = 0; j < ftp.FieldCount; j++)
-                    {
-                        if (fcList[i].FieldType == (int)EmFieldType.Lable)
-                        {
-                            fildContent = "<label name=\"" + fcList[i].Field + "\"></label>";
-                        }
-                        else if (fcList[i].FieldType == (int)EmFieldType.Text)
-                        {
-                            fildContent = "<input type=\"text\" name=\"" + fcList[i].Field + "\" />";
-                        }
-                        else if (fcList[i].FieldType == (int)EmFieldType.TextArea)
-                        {
-                            fildContent = "<textarea  name=\"" + fcList[i].Field + "\"></textarea>";
-                        }
-                        else if (fcList[i].FieldType == (int)EmFieldType.Password)
-                        {
-                            fildContent = "<input type=\"password\"  name=\"" + fcList[i].Field + "\"/>";
-                        }
-                        else if (fcList[i].FieldType == (int)EmFieldType.NormalButton)
-                        {
-                            fildContent = "<input type=\"button\" value=\"" + fcList[i].FieldLable + "\"/>";
-                        }
-                        else if (fcList[i].FieldType == (int)EmFieldType.SubmitButton)
-                        {
-                            fildContent = "<input type=\"submit\" value=\"" + fcList[i].FieldLable + "\"/>";
-                        }
-                        else if (fcList[i].FieldType == (int)EmFieldType.Radio)
-                        {
 
-                        }
-                        else if (fcList[i].FieldType == (int)EmFieldType.CheckBox)
-                        {
 
-                        }
-                        else if (fcList[i].FieldType == (int)EmFieldType.Select)
-                        {
+            //        //模板字段内容处理 
+            //        string fildContent = null;
+            //        for (int j = 0; j < ftp.FieldCount; j++)
+            //        {
+            //            if (fcList[i].FieldType == (int)EmFieldType.Lable)
+            //            {
+            //                fildContent = "<label name=\"" + fcList[i].Field + "\"></label>";
+            //            }
+            //            else if (fcList[i].FieldType == (int)EmFieldType.Text)
+            //            {
+            //                fildContent = "<input type=\"text\" name=\"" + fcList[i].Field + "\" />";
+            //            }
+            //            else if (fcList[i].FieldType == (int)EmFieldType.TextArea)
+            //            {
+            //                fildContent = "<textarea  name=\"" + fcList[i].Field + "\"></textarea>";
+            //            }
+            //            else if (fcList[i].FieldType == (int)EmFieldType.Password)
+            //            {
+            //                fildContent = "<input type=\"password\"  name=\"" + fcList[i].Field + "\"/>";
+            //            }
+            //            else if (fcList[i].FieldType == (int)EmFieldType.NormalButton)
+            //            {
+            //                fildContent = "<input type=\"button\" value=\"" + fcList[i].FieldLable + "\"/>";
+            //            }
+            //            else if (fcList[i].FieldType == (int)EmFieldType.SubmitButton)
+            //            {
+            //                fildContent = "<input type=\"submit\" value=\"" + fcList[i].FieldLable + "\"/>";
+            //            }
+            //            else if (fcList[i].FieldType == (int)EmFieldType.Radio)
+            //            {
 
-                        }
-                        sbFildHtml.Replace("{$filed" + (j + 1) + "Name$}", fcList[i].FieldLable).Replace("{$filed" + (j + 1) + "$}", fildContent);
+            //            }
+            //            else if (fcList[i].FieldType == (int)EmFieldType.CheckBox)
+            //            {
 
-                        if (j < ftp.FieldCount - 1)
-                        {
-                            i++;
-                        }
-                    }
-                }
-            }
+            //            }
+            //            else if (fcList[i].FieldType == (int)EmFieldType.Select)
+            //            {
+
+            //            }
+            //            sbFildHtml.Replace("{$filed" + (j + 1) + "Name$}", fcList[i].FieldLable).Replace("{$filed" + (j + 1) + "$}", fildContent);
+
+            //            if (j < ftp.FieldCount - 1)
+            //            {
+            //                i++;
+            //            }
+            //        }
+            //    }
+            //}
 
             StringBuilder sbHtml = new StringBuilder();
             sbHtml.AppendLine("<style type='text/css'>");
-            sbHtml.AppendLine(ft.Style);
-            sbHtml.AppendLine(fg.Style);
             sbHtml.AppendLine("</style>");
             sbHtml.AppendLine(ft.Content.Replace("<formContent></formContent>", Convert.ToString(sbHdFildHtml) + Convert.ToString(sbFildHtml)));
             return Content(sbHtml.ToString());

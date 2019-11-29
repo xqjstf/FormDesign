@@ -19,11 +19,6 @@ namespace FormDesign.Models
         /// <summary>
         /// 内容
         /// </summary>
-        public string Content { get; set; }
-
-        /// <summary>
-        /// 样式
-        /// </summary>
-        public string Style { get; set; }
+        public string Content { get; set; } 
     }
 }

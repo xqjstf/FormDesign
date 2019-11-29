@@ -1,0 +1,47 @@
+﻿@model PetaPoco.Page<V_FormConfig>
+@{
+    ViewBag.Title = "表单配置";
+}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h2 class="sub-header">
+        <span>
+            @ViewBag.Title
+        </span>
+        <a class="btn btn-default btn-sm  ft-r" href="@Url.Action("SaveFormConfig")">
+            <span class="glyphicon   glyphicon-plus" aria-hidden="true"></span>
+        </a>
+    </h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped  table-hover">
+            <thead>
+                <tr>
+                    <th>表单名称</th>
+                    <th>涉及数据表</th>
+                    <th>表单模板</th>
+                    <th>字段模板组</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (V_FormConfig item in Model.Items)
+                {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("SaveFormConfig",new { id=item.Id})">@item.Name</a>
+                        </td>
+                        <td>@item.TableName</td>
+                        <td>@item.FormTemplateName</td>
+                        <td>@item.FieldTemplateGroupName</td>
+                        <td>
+                            <a href="@Url.Action("DelFormConfig",new { id=item.Id})">删除</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <nav aria-label="Page navigation  text-center">
+            @Html.Pager(Model.CurrentPage, Model.ItemsPerPage, Model.TotalItems, Model.TotalPages)
+        </nav>
+    </div>
+</div>

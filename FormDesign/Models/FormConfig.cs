@@ -13,6 +13,11 @@ namespace FormDesign.Models
         public int Id { get; set; }
 
         /// <summary>
+        /// 表单名称
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// 表单模板Id
         /// </summary>
         public int FormTemplateId { get; set; }
@@ -31,5 +36,23 @@ namespace FormDesign.Models
         /// 表单样式
         /// </summary>
         public string Style { get; set; }
+
+        /// <summary>
+        /// 默认一行几列
+        /// </summary>
+        public int? Rows { get; set; }
+    }
+    public class V_FormConfig : FormConfig
+    {
+        /// <summary>
+        /// 表单模板名称
+        /// </summary>
+        public string FormTemplateName { get; set; }
+
+        /// <summary>
+        /// 字段模板组名称
+        /// </summary>
+        public string FieldTemplateGroupName { get; set; }
+
     }
 }

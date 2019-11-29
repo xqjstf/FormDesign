@@ -24,27 +24,14 @@ namespace FormDesign.Models
         /// <summary>
         /// 内容
         /// </summary>
-        public string Content { get; set; }
+        public string Content { get; set; } 
 
+    }
+    public class V_FieldTemplate : FieldTemplate
+    {
         /// <summary>
-        /// 字段个数
+        /// 组名称
         /// </summary>
-        public int? FieldCount { get; set; }
-
-
-        /// <summary>
-        /// 字段模板组
-        /// </summary>
-        [PetaPoco.ResultColumn]
-        public static Dictionary<int, string> FieldTemplateGroup
-        {
-            get
-            {
-                Dictionary<int, string> dic = new Dictionary<int, string>();
-                dic.Add(0, "");
-                dic.Add(1, "表格");
-                return dic;
-            }
-        }
+        public string GroupName { get; set; }
     }
 }
