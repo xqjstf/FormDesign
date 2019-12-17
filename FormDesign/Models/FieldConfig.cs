@@ -72,5 +72,18 @@ namespace FormDesign.Models
         /// 默认值
         /// </summary>
         public string DeafultValue { get; set; }
+
+        /// <summary>
+        /// 所属表单Id
+        /// </summary>
+        public int FormId { get; set; }
+    }
+
+    public class V_FieldConfig : FieldConfig
+    {
+        /// <summary>
+        /// 表单名称
+        /// </summary>
+        public string FormName { get; set; }
     }
 }

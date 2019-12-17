@@ -94,44 +94,7 @@ namespace FormDesign.Controllers
             _IFormDesign.Delete<FieldTemplate>(id);
             return Alert("删除成功！", Url.Action("FieldTemplate"));
         }
-        #endregion
-
-        #region 字段配置
-        public ActionResult FieldConfig(int page = 1)
-        {
-            return View(_IFormDesign.GetFieldConfig(page, PageSize));
-        }
-        public ActionResult SaveFieldConfig(int? id)
-        {
-            FieldConfig model = null;
-            if (id.HasValue)
-            {
-                model = _IFormDesign.GetFieldConfig(id.Value);
-                if (model == null)
-                {
-                    return Alert("表单模板不存在！");
-                }
-            }
-            else
-            {
-                model = new Models.FieldConfig();
-            }
-            return View(model);
-        }
-
-        [HttpPost]
-        public ActionResult SaveFieldConfig(FieldConfig model)
-        {
-            _IFormDesign.Save<FieldConfig>(model);
-            return Alert("数据保存成功！", Url.Action("FieldTemplate"));
-        }
-
-        public ActionResult DelFieldConfig(int id)
-        {
-            _IFormDesign.Delete<FieldConfig>(id);
-            return Alert("删除成功！", Url.Action("FieldTemplate"));
-        }
-        #endregion
+        #endregion 
 
         #region 表单配置
         public ActionResult FormConfig(int page = 1)
@@ -153,14 +116,15 @@ namespace FormDesign.Controllers
             {
                 model = new FormConfig();
             }
-            ViewBag.TableName = _IFormDesign.GetFieldConfigGroupTableName();
+            ViewBag.TableName = _IFormDesign.GetDBTableAndView();
             ViewData["FieldTemplateGroupId"] = new SelectList(_IFormDesign.GetFieldTemplateGroup(), "Id", "Name", model.FieldTemplateGroupId);
-            ViewData["FormTemplateId"] = new SelectList(_IFormDesign.GetFormTemplate(), "Id", "Name", model.FormTemplateId);            
+            ViewData["FormTemplateId"] = new SelectList(_IFormDesign.GetFormTemplate(), "Id", "Name", model.FormTemplateId);
             return View(model);
         }
         [HttpPost]
         public ActionResult SaveFormConfig(FormConfig model)
         {
+            model.TableName = Request.Form["TableName"];
             _IFormDesign.Save<FormConfig>(model);
             return Alert("数据保存成功！", Url.Action("FormConfig"));
         }
@@ -170,6 +134,104 @@ namespace FormDesign.Controllers
             _IFormDesign.Delete<FormConfig>(id);
             return Alert("删除成功！", Url.Action("FormConfig"));
         }
+        /// <summary>
+        /// 获取字段模板根据模板组
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
+        public JsonResult GetFieldTemplateByGroupId(int groupId)
+        {
+            return Json(_IFormDesign.GetFieldTemplateByGroupId(groupId), JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 表单字段克隆
+        /// </summary>
+        /// <param name="formId">表单Id</param>
+        /// <returns></returns>
+        public ActionResult CopyFormField(int formId)
+        {
+            FormConfig fConfig = _IFormDesign.GetFormConfig(formId);
+            if (fConfig == null)
+            {
+                return Alert("表单配置不存在！");
+            }
+            else
+            {
+                ViewBag.FormConfig = fConfig;
+                IList<string> model = _IFormDesign.GetCopyFormFieldTable(formId);
+                return View(model);
+            }
+        }
+        /// <summary>
+        /// 表单字段克隆
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult CopyFormField()
+        {
+            _IFormDesign.CopyFormField(Request.Form["TableName"], Convert.ToInt32(Request.Form["FormId"]));
+            return Alert("数据保存成功！", Url.Action("FormConfig"));
+        }
+
+        /// <summary>
+        /// 获取表单表名称
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        public JsonResult GetFormTableName(int formId)
+        {
+            IEnumerable<string> arrTableName = _IFormDesign.GetFormTableName(formId).Split(',').Where(p => string.IsNullOrEmpty(p) == false);
+            return Json(arrTableName, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+        #region 字段配置
+        public ActionResult FieldConfig(int page = 1)
+        {
+            return View(_IFormDesign.GetFieldConfig(page, PageSize));
+        }
+        public ActionResult SaveFieldConfig(int? id)
+        {
+            FieldConfig model = null;
+            if (id.HasValue)
+            {
+                model = _IFormDesign.GetFieldConfig(id.Value);
+                if (model == null)
+                {
+                    return Alert("表单字段不存在！");
+                }
+            }
+            else
+            {
+                model = new Models.FieldConfig();
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult SaveFieldConfig(FieldConfig model)
+        {
+            _IFormDesign.Save<FieldConfig>(model);
+            return Alert("数据保存成功！", Url.Action("FieldTemplate"));
+        }
+
+        public ActionResult DelFieldConfig(int id)
+        {
+            _IFormDesign.Delete<FieldConfig>(id);
+            return Alert("删除成功！", Url.Action("FieldTemplate"));
+        }
+
+        /// <summary>
+        /// 根据表名称获取表字段
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public ActionResult GetFieldByTableName(string tableName)
+        {
+            return Json(_IFormDesign.GetFieldByTableName(tableName), JsonRequestBehavior.AllowGet); 
+        }
+
         #endregion
 
         #region 表单预览

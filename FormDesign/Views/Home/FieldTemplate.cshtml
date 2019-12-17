@@ -16,7 +16,8 @@
             <thead>
                 <tr>
                     <th>名称</th>
-                    <th>组别</th> 
+                    <th>组别</th>
+                    <th width="50%">内容</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -25,11 +26,14 @@
                 {
                     <tr>
                         <td>
-                            <a href="@Url.Action("SaveFieldTemplate",new { id=item.Id})">@item.Name</a>
+                            <a href="@Url.Action("SaveFieldConfig",new { id=item.Id})">@item.Name</a>
                         </td>
                         <td>
-                            @item.GroupName 
-                        </td> 
+                            @item.GroupName
+                        </td>
+                        <td>
+                            @item.Content
+                        </td>
                         <td>
                             <a href="@Url.Action("DelFieldTemplate",new { id=item.Id})">删除</a>
                         </td>

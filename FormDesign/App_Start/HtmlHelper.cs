@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using System.Web.Routing;
+using System.Linq;
 using System.Collections.Specialized;
+using System.Reflection;
+using System.ComponentModel.DataAnnotations;
+
 namespace System.Web.Mvc
 {
     public static class HtmlHelpers
@@ -125,6 +129,42 @@ namespace System.Web.Mvc
             }
             return sb.ToString();
         }
-        #endregion 
+        #endregion
+
+        /// <summary>
+        /// 下拉框绑定
+        /// </summary>
+        /// <param name="htmlHelper"></param>
+        /// <param name="name">名称</param>
+        /// <param name="defaultValue">默认值</param>
+        /// <param name="haveNull">是否包含空值</param>
+        /// <param name="enumType">枚举类型</param>
+        /// <param name="htmlAttributes">html属性</param>
+        /// <returns></returns>
+        public static MvcHtmlString DropDownList(this HtmlHelper htmlHelper, string name, object defaultValue, bool haveNull, Type enumType, object htmlAttributes)
+        {
+            TagBuilder builder = new TagBuilder("select");
+            builder.MergeAttribute("name", name);
+            builder.GenerateId(name);
+            builder.MergeAttributes(new RouteValueDictionary(htmlAttributes));
+            if (haveNull)
+            {
+                builder.InnerHtml += "<option value=''>-请选择-</option>";
+            }
+            foreach (object e in Enum.GetValues(enumType))
+            {
+                string filed = e.ToString();
+                string filedName = (e.GetType().GetField(filed).GetCustomAttributes(typeof(DisplayAttribute), true)[0] as DisplayAttribute).Name;
+                TagBuilder tag2 = new TagBuilder("option");
+                tag2.SetInnerText(filedName);
+                tag2.MergeAttribute("value", filed);
+                if (filed.Equals(defaultValue))
+                {
+                    tag2.MergeAttribute("selected", "selected");
+                }
+                builder.InnerHtml += tag2.ToString(TagRenderMode.Normal);
+            }
+            return MvcHtmlString.Create(builder.ToString(TagRenderMode.Normal));
+        }
     }
 }

@@ -1,7 +1,7 @@
-﻿@model PetaPoco.Page<FieldConfig>
+﻿@model PetaPoco.Page<V_FieldConfig>
 
 @{
-    ViewBag.Title = "字段模板";
+    ViewBag.Title = "表单字段配置";
 }
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <h2 class="sub-header">
@@ -17,6 +17,7 @@
         <table class="table table-striped  table-hover">
             <thead>
                 <tr>
+                    <th>所属表单</th>
                     <th>字段</th>
                     <th>名称</th>
                     <th>表名称</th>
@@ -33,9 +34,12 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (FieldConfig item in Model.Items)
+                @foreach (V_FieldConfig item in Model.Items)
                 {
                     <tr>
+                        <td>
+                            @item.FormName
+                        </td>
                         <td>
                             <a href="@Url.Action("SaveFieldTemplate", new { id = item.Id })">@item.Field</a>
                         </td>

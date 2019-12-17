@@ -132,6 +132,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DBTable.cs" />
     <Compile Include="Models\EmFieldType.cs" />
     <Compile Include="Models\FieldConfig.cs" />
     <Compile Include="Models\FieldTemplate.cs" />
@@ -161,6 +162,8 @@
     <Content Include="Views\Home\FieldConfig.cshtml" />
     <Content Include="Views\Home\FormConfig.cshtml" />
     <Content Include="Views\Home\SaveFormConfig.cshtml" />
+    <Content Include="Views\Home\CopyFormField.cshtml" />
+    <Content Include="Views\Home\SaveFieldConfig.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

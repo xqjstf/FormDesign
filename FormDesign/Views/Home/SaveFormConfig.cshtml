@@ -1,7 +1,7 @@
 ﻿@model  FormConfig
 @{
     ViewBag.Title = "表单配置维护";
-    IList<string> TableName = ViewBag.TableName;
+    IList<DBTable> TableName = ViewBag.TableName;
     Model.TableName = Model.TableName ?? "";
 }
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -16,10 +16,11 @@
         <div class="form-group">
             <label for="inputEmail3" class="col-sm-2 control-label">涉及数据表</label>
             <div class="col-sm-10">
-                @foreach (string str in TableName)
+                @foreach (DBTable item in TableName)
                 {
                     <label class="checkbox-inline">
-                        <input name="TableName" type="checkbox" required id="inlineCheckbox1" checked="@(Model.TableName.Contains(str))" value="@str">@str
+                        <input name="TableName" type="checkbox" id="inlineCheckbox1" checked="@((Model.TableName??"").Contains(item.Name))" value="@item.Name">
+                        @item.Name
                     </label>
                 }
             </div>
@@ -37,9 +38,11 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">默认一行几列</label>
+            <label for="inputEmail3" class="col-sm-2 control-label">默认字段模板</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" value="@Model.Rows" maxlength="50" name="Rows" required="required" placeholder="一行几列">
+                <select name="DeafultFieldTemplate" required="required" class="form-control">
+                    <option  value=""></option>
+                </select>
             </div>
         </div>
         <div class="form-group">
@@ -58,3 +61,33 @@
         </div>
     </form>
 </div>
+<script type="text/javascript">
+    $(function () {
+        //字段模板组切换
+        $("select[name='FieldTemplateGroupId']").bind("change", FieldTemplateGroupId());
+    })
+    //字段模板组切换
+    function FieldTemplateGroupId() {
+        var groupId = $("select[name='FieldTemplateGroupId']").val();
+        var html = "<option value=\"\"></option>";
+        if (groupId != "") { 
+            $.ajax({
+                type: "get",
+                url: "@Url.Action("GetFieldTemplateByGroupId")?groupId=" + groupId,
+                async: false,
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].Id == "@Model.DeafultFieldTemplate") {
+                            html += "<option selected=\"selected\" value=\"" + data[i].Id + "\">" + data[i].Name + "</option>";
+                        }
+                        else {
+                            html += "<option value=\"" + data[i].Id + "\">" + data[i].Name + "</option>";
+                        }
+                      
+                    } 
+                }
+            });
+        }
+        $("select[name='DeafultFieldTemplate']").html(html);
+    }
+</script>

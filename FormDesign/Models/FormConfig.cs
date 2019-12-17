@@ -40,7 +40,7 @@ namespace FormDesign.Models
         /// <summary>
         /// 默认一行几列
         /// </summary>
-        public int? Rows { get; set; }
+        public int? DeafultFieldTemplate { get; set; }
     }
     public class V_FormConfig : FormConfig
     {

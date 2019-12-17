@@ -20,6 +20,7 @@
                     <th>涉及数据表</th>
                     <th>表单模板</th>
                     <th>字段模板组</th>
+                    <th>默认字段模板</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -33,7 +34,9 @@
                         <td>@item.TableName</td>
                         <td>@item.FormTemplateName</td>
                         <td>@item.FieldTemplateGroupName</td>
+                        <th>后期填充</th>
                         <td>
+                            <a href="@Url.Action("CopyFormField",new { formId=item.Id})">字段克隆</a>
                             <a href="@Url.Action("DelFormConfig",new { id=item.Id})">删除</a>
                         </td>
                     </tr>

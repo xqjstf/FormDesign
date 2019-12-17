@@ -24,6 +24,10 @@
     <!-- Custom styles for this template -->
     <link href="~/Content/dashboard.css" rel="stylesheet" />
     <link href="~/Content/public.css" rel="stylesheet" />
+
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="~/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="~/assets/js/ie-emulation-modes-warning.js"></script>
@@ -76,7 +80,10 @@
                         <a href="@Url.Action("FormConfig")">表单配置</a>
                     </li>
                     <li class="@(Request.Url.PathAndQuery.Contains("FieldConfig")?"active":"")">
-                        <a href="@Url.Action("FieldConfig")">字段配置</a>
+                        <a href="@Url.Action("FieldConfig")">表单字段配置</a>
+                    </li>
+                    <li class="@(Request.Url.PathAndQuery.Contains("FieldConfig")?"active":"")">
+                        <a href="@Url.Action("FieldConfig")">验证规则配置</a>
                     </li>
                 </ul>
             </div>
@@ -86,9 +93,7 @@
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <!-- Placed at the end of the document so the pages load faster --> 
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
     <script src="~/assets/js/vendor/holder.min.js"></script>

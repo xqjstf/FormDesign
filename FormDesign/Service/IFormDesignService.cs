@@ -75,6 +75,7 @@ namespace FormDesign
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Page<V_FieldTemplate> GetFieldTemplate(int pageIndex, int pageSize);
+
         #endregion
 
         #region 字段配置
@@ -103,7 +104,14 @@ namespace FormDesign
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        Page<FieldConfig> GetFieldConfig(int pageIndex, int pageSize);
+        Page<V_FieldConfig> GetFieldConfig(int pageIndex, int pageSize);
+
+        /// <summary>
+        /// 根据表名称获取表字段
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        IList<DBTable> GetFieldByTableName(string tableName); 
         #endregion
 
         #region 表单配置
@@ -120,6 +128,33 @@ namespace FormDesign
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Page<V_FormConfig> GetFormConfig(int pageIndex, int pageSize);
+
+        /// <summary>
+        /// 获取数据库中的表和试图
+        /// </summary>
+        /// <returns></returns>
+        IList<DBTable> GetDBTableAndView();
+
+        /// <summary>
+        /// 获取表单字段克隆表名称
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        IList<string> GetCopyFormFieldTable(int formId);
+
+        /// <summary>
+        /// 表单字段克隆
+        /// </summary>
+        /// <param name="tableName">要克隆的表名</param>
+        /// <param name="formId">表单Id</param>
+        void CopyFormField(string tableName, int formId);
+
+        /// <summary>
+        /// 获取表单表名称
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        string GetFormTableName(int formId);
         #endregion
     }
 }

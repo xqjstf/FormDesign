@@ -114,6 +114,15 @@ namespace FormDesign
         #endregion
 
         #region 字段配置
+        public Sql GetFieldConfigSql()
+        {
+            Sql sql = new Sql();
+            sql.Append(@"SELECT  a.*,
+                         b.Name FormName
+                                        FROM    dbo.FieldConfig a
+                                       LEFT JOIN dbo.FormConfig b ON a.FormId = b.Id");
+            return sql;
+        }
         /// <summary>
         /// 字段配置
         /// </summary>
@@ -121,7 +130,9 @@ namespace FormDesign
         /// <returns></returns>
         public FieldConfig GetFieldConfig(int id)
         {
-            return DB.FirstOrDefault<FieldConfig>("Where Id=@0", id);
+            Sql sql = GetFieldConfigSql();
+            sql.Where("Id=@0", id);
+            return DB.FirstOrDefault<V_FieldConfig>(sql);
         }
         /// <summary>
         /// 获取表字段配置集合
@@ -130,7 +141,9 @@ namespace FormDesign
         /// <returns></returns>
         public IList<FieldConfig> GetFieldConfigByTableName(string tableName)
         {
-            return DB.Fetch<FieldConfig>("Where TableName=@0", tableName);
+            Sql sql = GetFieldConfigSql();
+            sql.Where("TableName=@0", tableName);
+            return DB.Fetch<FieldConfig>(sql);
         }
         /// <summary>
         /// 获取在字段配置中存在的表名
@@ -138,7 +151,7 @@ namespace FormDesign
         /// <returns></returns>
         public IList<string> GetFieldConfigGroupTableName()
         {
-            return DB.Fetch<string>("SELECT TableName  FROM  FieldConfig group BY  TableName ORDER BY TableName"); 
+            return DB.Fetch<string>("SELECT TableName  FROM  FieldConfig group BY  TableName ORDER BY TableName");
         }
         /// <summary>
         /// 字段配置分页列表
@@ -146,15 +159,30 @@ namespace FormDesign
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public Page<FieldConfig> GetFieldConfig(int pageIndex, int pageSize)
+        public Page<V_FieldConfig> GetFieldConfig(int pageIndex, int pageSize)
         {
-            Sql sql = new Sql();
-            sql.Append(@"SELECT  a.*
-                        FROM    dbo.FieldConfig a
-                        ORDER BY a.TableName,
-                                a.Seq ,
-                                a.Field");
-            return DB.Page<FieldConfig>(pageIndex, pageSize, sql);
+            Sql sql = GetFieldConfigSql();
+            sql.Append(@"ORDER BY a.TableName, a.Seq ,a.Field");
+            return DB.Page<V_FieldConfig>(pageIndex, pageSize, sql);
+        }
+        /// <summary>
+        /// 根据表名称获取表字段
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public IList<DBTable> GetFieldByTableName(string tableName)
+        {
+            return DB.Fetch<DBTable>(@"SELECT   c.name AS ColumnsName ,
+                                                t.name AS ColumnsType ,
+                                                c.length AS ColumnsLength
+                                        FROM    SysObjects AS o ,
+                                                SysColumns AS c ,
+                                                SysTypes AS t
+                                        WHERE   o.type IN ( 'u', 'v' )
+                                                AND o.name = @0
+                                                AND o.id = c.id
+                                                AND c.xtype = t.xtype
+                                        ORDER BY c.name ", tableName);
         }
         #endregion
 
@@ -189,6 +217,78 @@ namespace FormDesign
                         FROM    FormConfig a ");
             sql.OrderBy("a.Id");
             return DB.Page<V_FormConfig>(pageIndex, pageSize, sql);
+        }
+        /// <summary>
+        /// 获取数据库中的表和试图
+        /// </summary>
+        /// <returns></returns>
+        public IList<DBTable> GetDBTableAndView()
+        {
+            return DB.Fetch<DBTable>("SELECT name FROM  SysObjects WHERE type  IN ( 'u', 'v' ) ORDER BY name");
+        }
+
+        /// <summary>
+        /// 获取表单字段克隆表名称
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        public IList<string> GetCopyFormFieldTable(int formId)
+        {
+            return DB.Fetch<string>(@"SELECT   DISTINCT  CAST(a.FormId AS VARCHAR(10)) + '_' + a.TableName
+                                  FROM      dbo.FieldConfig a
+                                  WHERE     a.TableName IN (
+                                            SELECT  '' + REPLACE(a1.TableName, ',', '''') + ''
+                                            FROM    FormConfig a1
+                                            WHERE   a1.Id = @0 )", formId);
+        }
+
+        /// <summary>
+        /// 表单字段克隆
+        /// </summary>
+        /// <param name="tableName">要克隆的表名</param>
+        /// <param name="formId">表单Id</param>
+        public void CopyFormField(string tableName, int formId)
+        {
+            DB.Execute(@"               
+               INSERT   INTO dbo.FieldConfig
+                        ( TableName ,
+                          Field ,
+                          FieldLable ,
+                          FieldType ,
+                          FieldTemplateId ,
+                          FieldLength ,
+                          IsPrimaryKey ,
+                          IsRequired ,
+                          RegExpression ,
+                          IsEnabled ,
+                          Seq ,
+                          DeafultValue ,
+                          FormId
+                        )
+                        SELECT  TableName ,
+                                Field ,
+                                FieldLable ,
+                                FieldType ,
+                                FieldTemplateId ,
+                                FieldLength ,
+                                IsPrimaryKey ,
+                                IsRequired ,
+                                RegExpression ,
+                                IsEnabled ,
+                                Seq ,
+                                DeafultValue ,
+                                @1
+                        FROM    FieldConfig
+                        WHERE    CAST(a.FormId AS VARCHAR(10)) + '_' + a.TableName=@0", tableName, formId);
+        }
+        /// <summary>
+        /// 获取表单表名称
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        public string GetFormTableName(int formId)
+        {
+            return DB.FirstOrDefault<string>("SELECT TableName FROM dbo.FormConfig WHERE Id=0", formId);
         }
         #endregion
     }
