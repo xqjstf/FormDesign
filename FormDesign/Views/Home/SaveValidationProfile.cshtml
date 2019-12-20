@@ -1,0 +1,35 @@
+﻿@model  ValidationProfile
+@{
+    ViewBag.Title = "验证规则配置维护"; 
+}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h2 class="sub-header">@ViewBag.Title</h2>
+    <form class="form-horizontal" method="post">
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">名称</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" value="@Model.Name" maxlength="50" name="Name" required placeholder="名称">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">验证代码</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" rows="15" placeholder="验证代码" name="Content" required>@Model.Content</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">说明</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" rows="5"  placeholder="说明" name="Remark" >@Model.Remark</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                @Html.HiddenFor(p => p.Id)
+                <button type="submit" class="btn btn-success">保存</button>
+                &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;
+                <a href="@Url.Action("ValidationProfile")" class="btn btn-info">返回</a>
+            </div>
+        </div>
+    </form>
+</div>

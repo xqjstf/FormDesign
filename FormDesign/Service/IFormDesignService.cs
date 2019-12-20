@@ -55,6 +55,14 @@ namespace FormDesign
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Page<FieldTemplateGroup> GetFieldTemplateGroup(int pageIndex, int pageSize);
+
+        /// <summary>
+        /// 根据表单获取字段模板
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        IList<FieldTemplate> GetFieldTemplateByFormId(int formId);
+
         /// <summary>
         /// 字段模板
         /// </summary>
@@ -111,7 +119,7 @@ namespace FormDesign
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        IList<DBTable> GetFieldByTableName(string tableName); 
+        IList<DBTable> GetFieldByTableName(string tableName);
         #endregion
 
         #region 表单配置
@@ -120,7 +128,7 @@ namespace FormDesign
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        FormConfig GetFormConfig(int id);
+        V_FormConfig GetFormConfig(int id);
         /// <summary>
         /// 表单配置分页列表
         /// </summary>
@@ -128,6 +136,12 @@ namespace FormDesign
         /// <param name="pageSize"></param>
         /// <returns></returns>
         Page<V_FormConfig> GetFormConfig(int pageIndex, int pageSize);
+
+        /// <summary>
+        /// 获取所有的表单
+        /// </summary>
+        /// <returns></returns>
+        IList<V_FormConfig> GetFormConfig();
 
         /// <summary>
         /// 获取数据库中的表和试图
@@ -155,6 +169,29 @@ namespace FormDesign
         /// <param name="formId"></param>
         /// <returns></returns>
         string GetFormTableName(int formId);
+        #endregion
+
+        #region 验证配置
+        /// <summary>
+        /// 验证配置分页列表
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        Page<ValidationProfile> GetValidationProfile(int pageIndex, int pageSize);
+
+        /// <summary>
+        /// 验证配置列表
+        /// </summary>
+        /// <returns></returns>
+        IList<ValidationProfile> GetValidationProfile();
+
+        /// <summary>
+        /// 验证配置
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        ValidationProfile GetValidationProfile(int id);
         #endregion
     }
 }

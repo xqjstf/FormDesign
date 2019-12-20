@@ -8,19 +8,19 @@
         <div class="form-group">
             <label for="inputEmail3" class="col-sm-2 control-label">所属表单</label>
             <div class="col-sm-10">
-                @Html.DropDownList("FormId", null, new { @class = "form-control" })
+                @Html.DropDownList("FormId", null, "", new { @class = "form-control required" })
             </div>
         </div>
         <div class="form-group">
             <label for="inputEmail3" class="col-sm-2 control-label">所属表</label>
             <div class="col-sm-10">
-                <select name="TableName"></select>
+                <select name="TableName" class="form-control"></select>
             </div>
         </div>
         <div class="form-group">
             <label for="inputEmail3" class="col-sm-2 control-label">字段</label>
             <div class="col-sm-10">
-                <select name="Field"></select>
+                <select name="Field" class="form-control"></select>
             </div>
         </div>
         <div class="form-group">
@@ -32,18 +32,93 @@
         <div class="form-group">
             <label for="inputEmail3" class="col-sm-2 control-label">字段类型</label>
             <div class="col-sm-10">
-                @Html.DropDownList("FieldType", Model.FieldType, true, typeof(EmFieldType), null)
+                @Html.DropDownList("FieldType", Model.FieldType, true, typeof(EmFieldType), new { @class = "form-control required" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">字段模板</label>
+            <div class="col-sm-10">
+                <!--为空则默认-->
+                <select name="FieldTemplateId" class="form-control"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">是否主键</label>
+            <div class="col-sm-10">
+                <label class="checkbox-inline">
+                    <input name="IsPrimaryKey" type="radio" checked="@(Model.IsPrimaryKey.GetValueOrDefault(false))" value="true">
+                    <label>是</label>
+                </label>
+                <label class="checkbox-inline">
+                    <input name="IsPrimaryKey" type="radio" checked="@(Model.IsPrimaryKey.GetValueOrDefault(false)==false)" value="false">
+                    <label>否</label>
+                </label>
+                <span class="text-danger">(用于数据保存)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">字段长度</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" value="@Model.FieldLength" maxlength="50" name="FieldLength" required placeholder="字段长度">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">是否必填</label>
+            <div class="col-sm-10">
+                <label class="checkbox-inline">
+                    <input name="IsRequired" type="radio" checked="@(Model.IsRequired.GetValueOrDefault(false))" value="true">
+                    <label>是</label>
+                </label>
+                <label class="checkbox-inline">
+                    <input name="IsRequired" type="radio" checked="@(Model.IsRequired.GetValueOrDefault(false)==false)" value="false">
+                    <label>否</label>
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">数据验证</label>
+            <div class="col-sm-10">
+                @Html.DropDownList("RegExpression", null, "", new { @class = "form-control required" })
+            </div>
+        </div>
+        <div class="form-group" id="dvCustomRegExpression">
+            <label for="inputEmail3" class="col-sm-2 control-label">验证代码</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" rows="15" placeholder="验证代码" name="CustomRegExpression">@Model.CustomRegExpression</textarea>
             </div>
         </div>
 
-
-
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">默认值</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" value="@Model.DeafultValue" maxlength="50" name="DeafultValue"  placeholder="默认值">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">是否启用</label>
+            <div class="col-sm-10">
+                <label class="checkbox-inline">
+                    <input name="IsEnabled" type="radio" checked="@(Model.IsEnabled.GetValueOrDefault(true))" value="true">
+                    <label>是</label>
+                </label>
+                <label class="checkbox-inline">
+                    <input name="IsEnabled" type="radio" checked="@(Model.IsEnabled.GetValueOrDefault(true)==false)" value="false">
+                    <label>否</label>
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">序号</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" value="@Model.Seq" maxlength="10" name="Seq" required placeholder="序号">
+            </div>
+        </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 @Html.HiddenFor(p => p.Id)
                 <button type="submit" class="btn btn-success">保存</button>
                 &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;
-                <a href="@Url.Action("FieldTemplate")" class="btn btn-info">返回</a>
+                <a href="@Url.Action("FieldConfig")" class="btn btn-info">返回</a>
             </div>
         </div>
     </form>
@@ -52,11 +127,31 @@
 <script type="text/javascript">
     $(function () {
         //所属表单切换
-        $("select[name='FormId']").bind("change", FormIdChange());
-        // 所属表切换
-        $("select[name='TableName']").bind("change", TableNameChange());
+        FormIdChange();
+        $("select[name='FormId']").bind("change", function () {
+            FormIdChange();
+        });
 
+        // 所属表切换
+        TableNameChange();
+        $("select[name='TableName']").bind("change", function () {
+            TableNameChange();
+        });
+
+        //数据验证切换
+        RegExpressionChange();
+        $("select[name='RegExpression']").bind("change", function () {
+            RegExpressionChange();
+        });        
     })
+    function RegExpressionChange() {
+        if ($("select[name='RegExpression']").val() == "0") {
+            $("#dvCustomRegExpression").show();
+        }
+        else {
+            $("#dvCustomRegExpression").hide();
+        } 
+    }
     function FormIdChange() {
         var formId = $("select[name='FormId']").val();
         var html = "<option value=\"\"></option>";
@@ -67,14 +162,14 @@
                 async: false,
                 success: function (data) {
                     for (var i = 0; i < data.length; i++) {
-                        if (data[i].Id == "@Model.TableName") {
+                        if (data[i] == "@Model.TableName") {
                             html += "<option selected=\"selected\" value=\"" + data[i] + "\">" + data[i] + "</option>";
                         }
                         else {
                             html += "<option value=\"" + data[i] + "\">" + data[i] + "</option>";
                         }
-
                     }
+                    GetFieldTemplateByFormId();
                 }
             });
         }
@@ -84,24 +179,48 @@
     function TableNameChange() {
         var tbName = $("select[name='TableName']").val();
         var html = "<option value=\"\"></option>";
-        if (formId != "") {
+        if (tbName != "") {
             $.ajax({
                 type: "get",
                 url: "@Url.Action("GetFieldByTableName")?tableName=" + tbName,
                 async: false,
                 success: function (data) {
                     for (var i = 0; i < data.length; i++) {
-                        if (data[i].Id == "@Model.Field") {
-                            html += "<option selected=\"selected\" value=\"" + data[i] + "\">" + data[i] + "</option>";
+                        if (data[i].ColumnsName == "@Model.Field") {
+                            html += "<option selected=\"selected\" value=\"" + data[i].ColumnsName + "\">" + data[i].ColumnsName + "</option>";
                         }
                         else {
-                            html += "<option value=\"" + data[i] + "\">" + data[i] + "</option>";
+                            html += "<option value=\"" + data[i].ColumnsName + "\">" + data[i].ColumnsName + "</option>";
+                        }
+                    }
+                }
+            });
+        }
+        $("select[name='Field']").html(html);
+    }
+
+    //根据表单获取字段模板
+    function GetFieldTemplateByFormId() {
+         var formId = $("select[name='FormId']").val();
+        var html = "<option value=\"\">默认</option>";
+        if (formId != "") {
+            $.ajax({
+                type: "get",
+                url: "@Url.Action("GetFieldTemplateByFormId")?formId=" + formId,
+                async: false,
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].Id == "@Model.FieldTemplateId") {
+                            html += "<option selected=\"selected\" value=\"" + data[i].Id + "\">" + data[i].Name + "</option>";
+                        }
+                        else {
+                            html += "<option value=\"" + data[i].Id + "\">" + data[i].Name + "</option>";
                         }
 
                     }
                 }
             });
         }
-        $("select[name='Field']").html(html);
+        $("select[name='FieldTemplateId']").html(html);
     }
 </script>

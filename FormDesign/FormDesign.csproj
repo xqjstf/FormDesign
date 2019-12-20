@@ -140,6 +140,7 @@
     <Compile Include="Models\FormConfig.cs" />
     <Compile Include="Models\FormTemplate.cs" />
     <Compile Include="App_Start\PetaPoco.cs" />
+    <Compile Include="Models\ValidationProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\FormDesignService.cs" />
     <Compile Include="Service\BaseService.cs" />
@@ -164,6 +165,8 @@
     <Content Include="Views\Home\SaveFormConfig.cshtml" />
     <Content Include="Views\Home\CopyFormField.cshtml" />
     <Content Include="Views\Home\SaveFieldConfig.cshtml" />
+    <Content Include="Views\Home\ValidationProfile.cshtml" />
+    <Content Include="Views\Home\SaveValidationProfile.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -149,7 +149,7 @@ namespace System.Web.Mvc
             builder.MergeAttributes(new RouteValueDictionary(htmlAttributes));
             if (haveNull)
             {
-                builder.InnerHtml += "<option value=''>-请选择-</option>";
+                builder.InnerHtml += "<option value=''></option>";
             }
             foreach (object e in Enum.GetValues(enumType))
             {

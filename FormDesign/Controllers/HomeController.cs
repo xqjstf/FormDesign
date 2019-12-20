@@ -11,10 +11,6 @@ namespace FormDesign.Controllers
     {
         private IFormDesignService _IFormDesign = new FormDesignService();
 
-        /// <summary>
-        /// 表单列表
-        /// </summary>
-        /// <returns></returns>
         public ActionResult Index()
         {
             return View();
@@ -94,7 +90,16 @@ namespace FormDesign.Controllers
             _IFormDesign.Delete<FieldTemplate>(id);
             return Alert("删除成功！", Url.Action("FieldTemplate"));
         }
-        #endregion 
+
+        /// <summary>
+        /// 根据表单获取字段模板
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult GetFieldTemplateByFormId(int formId)
+        {
+            return Json(_IFormDesign.GetFieldTemplateByFormId(formId), JsonRequestBehavior.AllowGet);
+        }
+        #endregion
 
         #region 表单配置
         public ActionResult FormConfig(int page = 1)
@@ -181,8 +186,51 @@ namespace FormDesign.Controllers
         /// <returns></returns>
         public JsonResult GetFormTableName(int formId)
         {
-            IEnumerable<string> arrTableName = _IFormDesign.GetFormTableName(formId).Split(',').Where(p => string.IsNullOrEmpty(p) == false);
-            return Json(arrTableName, JsonRequestBehavior.AllowGet);
+            string tableName = _IFormDesign.GetFormTableName(formId);
+            if (string.IsNullOrEmpty(tableName))
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(tableName.Split(',').Where(p => string.IsNullOrEmpty(p) == false), JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
+
+        #region 验证配置
+        public ActionResult ValidationProfile(int page = 1)
+        {
+            return View(_IFormDesign.GetValidationProfile(page, PageSize));
+        }
+        public ActionResult SaveValidationProfile(int? id)
+        {
+            ValidationProfile model = null;
+            if (id.HasValue)
+            {
+                model = _IFormDesign.GetValidationProfile(id.Value);
+                if (model == null)
+                {
+                    return Alert("验证配置不存在！");
+                }
+            }
+            else
+            {
+                model = new ValidationProfile();
+            }
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult SaveValidationProfile(ValidationProfile model)
+        {
+            _IFormDesign.Save<ValidationProfile>(model);
+            return Alert("数据保存成功！", Url.Action("ValidationProfile"));
+        }
+
+        public ActionResult DelValidationProfile(int id)
+        {
+            _IFormDesign.Delete<ValidationProfile>(id);
+            return Alert("删除成功！", Url.Action("ValidationProfile"));
         }
         #endregion
 
@@ -206,6 +254,17 @@ namespace FormDesign.Controllers
             {
                 model = new Models.FieldConfig();
             }
+            ViewData["FormId"] = new SelectList(_IFormDesign.GetFormConfig(), "Id", "Name", model.FormId);
+
+            //验证配置
+            IList<SelectListItem> regItems = new List<SelectListItem>();
+            foreach (var item in _IFormDesign.GetValidationProfile())
+            {
+                regItems.Add(new SelectListItem() { Text = item.Name, Value = item.Id.ToString(), Selected = (model.RegExpression == item.Id) });
+            }
+            regItems.Add(new SelectListItem() { Text = "自定义", Value = "0", Selected = (model.RegExpression == 0) });
+            ViewData["RegExpression"] = regItems;
+
             return View(model);
         }
 
@@ -213,13 +272,13 @@ namespace FormDesign.Controllers
         public ActionResult SaveFieldConfig(FieldConfig model)
         {
             _IFormDesign.Save<FieldConfig>(model);
-            return Alert("数据保存成功！", Url.Action("FieldTemplate"));
+            return Alert("数据保存成功！", Url.Action("FieldConfig"));
         }
 
         public ActionResult DelFieldConfig(int id)
         {
             _IFormDesign.Delete<FieldConfig>(id);
-            return Alert("删除成功！", Url.Action("FieldTemplate"));
+            return Alert("删除成功！", Url.Action("FieldConfig"));
         }
 
         /// <summary>
@@ -229,7 +288,7 @@ namespace FormDesign.Controllers
         /// <returns></returns>
         public ActionResult GetFieldByTableName(string tableName)
         {
-            return Json(_IFormDesign.GetFieldByTableName(tableName), JsonRequestBehavior.AllowGet); 
+            return Json(_IFormDesign.GetFieldByTableName(tableName), JsonRequestBehavior.AllowGet);
         }
 
         #endregion

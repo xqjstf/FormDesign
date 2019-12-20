@@ -8,7 +8,7 @@
         <span>
             @ViewBag.Title
         </span>
-        <a class="btn btn-default btn-sm  ft-r" href="@Url.Action("SaveFieldTemplate")">
+        <a class="btn btn-default btn-sm  ft-r" href="@Url.Action("SaveFieldConfig")">
             <span class="glyphicon   glyphicon-plus" aria-hidden="true"></span>
         </a>
     </h2>
@@ -41,7 +41,7 @@
                             @item.FormName
                         </td>
                         <td>
-                            <a href="@Url.Action("SaveFieldTemplate", new { id = item.Id })">@item.Field</a>
+                            <a href="@Url.Action("SaveFieldConfig", new { id = item.Id })">@item.Field</a>
                         </td>
                         <td>
                             @item.FieldLable
@@ -50,7 +50,7 @@
                             @item.TableName
                         </td>
                         <td>
-                            @(item.IsPrimaryKey.Value ? "是" : "否")
+                            @(item.IsPrimaryKey.GetValueOrDefault(false) ? "是" : "否")
                         </td>
                         <td>
                             @item.FieldType
@@ -59,7 +59,7 @@
                             @item.FieldLength
                         </td>
                         <td>
-                            @(item.IsRequired.Value ? "是" : "否")
+                            @(item.IsRequired.GetValueOrDefault(false) ? "是" : "否")
                         </td>
                         <td>
                             @item.FieldTemplateId
@@ -74,7 +74,7 @@
                             @item.DeafultValue
                         </td>
                         <td>
-                            @(item.IsEnabled.Value ? "启用" : "禁用")
+                            @(item.IsEnabled.GetValueOrDefault(true) ? "启用" : "禁用")
                         </td>
                         <td>
                             <a href="@Url.Action("DelFieldConfig",new { id=item.Id})">删除</a>

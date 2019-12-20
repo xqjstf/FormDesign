@@ -31,7 +31,7 @@ namespace FormDesign.Models
         /// <summary>
         /// 字段类型（参见EmFieldType枚举）
         /// </summary>
-        public int FieldType { get; set; }
+        public string FieldType { get; set; }
 
         /// <summary>
         /// 字段模板Id
@@ -56,7 +56,7 @@ namespace FormDesign.Models
         /// <summary>
         /// 正则表达式
         /// </summary>
-        public string RegExpression { get; set; }
+        public int? RegExpression { get; set; }
 
         /// <summary>
         /// 是否启用
@@ -77,6 +77,11 @@ namespace FormDesign.Models
         /// 所属表单Id
         /// </summary>
         public int FormId { get; set; }
+
+        /// <summary>
+        /// 自定义验证
+        /// </summary>
+        public string CustomRegExpression { get; set; }
     }
 
     public class V_FieldConfig : FieldConfig

@@ -63,6 +63,26 @@ namespace FormDesign
         }
 
         /// <summary>
+        /// 根据表单获取字段模板
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        public IList<FieldTemplate> GetFieldTemplateByFormId(int formId)
+        {
+            Sql sql = new Sql();
+            sql.Append(@" SELECT *
+                         FROM   dbo.FieldTemplate a
+                         WHERE  EXISTS ( SELECT 1
+                                         FROM   dbo.FieldTemplateGroup a1
+                                         WHERE  a.GroupId = a1.Id
+                                                AND EXISTS ( SELECT 1
+                                                             FROM   dbo.FormConfig a2
+                                                             WHERE  a1.Id = a2.FieldTemplateGroupId
+                                                                    AND a2.Id = @0) )", formId);
+            return DB.Fetch<FieldTemplate>(sql);
+        }
+
+        /// <summary>
         /// 字段组模板分页列表
         /// </summary>
         /// <param name="pageIndex"></param>
@@ -131,7 +151,7 @@ namespace FormDesign
         public FieldConfig GetFieldConfig(int id)
         {
             Sql sql = GetFieldConfigSql();
-            sql.Where("Id=@0", id);
+            sql.Where("a.Id=@0", id);
             return DB.FirstOrDefault<V_FieldConfig>(sql);
         }
         /// <summary>
@@ -182,27 +202,13 @@ namespace FormDesign
                                                 AND o.name = @0
                                                 AND o.id = c.id
                                                 AND c.xtype = t.xtype
+                                                AND t.name<>'sysname'
                                         ORDER BY c.name ", tableName);
         }
         #endregion
 
         #region 表单配置
-        /// <summary>
-        /// 表单配置
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public FormConfig GetFormConfig(int id)
-        {
-            return DB.FirstOrDefault<FormConfig>("Where Id=@0", id);
-        }
-        /// <summary>
-        /// 表单配置分页列表
-        /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
-        public Page<V_FormConfig> GetFormConfig(int pageIndex, int pageSize)
+        public Sql GetFormConfigSql()
         {
             Sql sql = new Sql();
             sql.Append(@"SELECT  a.* ,
@@ -215,9 +221,43 @@ namespace FormDesign
                                   WHERE     a1.id = a.FieldTemplateGroupId
                                 ) FieldTemplateGroupName
                         FROM    FormConfig a ");
+            return sql;
+        }
+        /// <summary>
+        /// 表单配置
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public V_FormConfig GetFormConfig(int id)
+        {
+            Sql sql = GetFormConfigSql();
+            sql.Where("Id=@0", id);
+            return DB.FirstOrDefault<V_FormConfig>(sql);
+        }
+
+        /// <summary>
+        /// 表单配置分页列表
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public Page<V_FormConfig> GetFormConfig(int pageIndex, int pageSize)
+        {
+            Sql sql = GetFormConfigSql();
             sql.OrderBy("a.Id");
             return DB.Page<V_FormConfig>(pageIndex, pageSize, sql);
         }
+        /// <summary>
+        /// 获取所有的表单
+        /// </summary>
+        /// <returns></returns>
+        public IList<V_FormConfig> GetFormConfig()
+        {
+            Sql sql = GetFormConfigSql();
+            sql.OrderBy("a.Name");
+            return DB.Fetch<V_FormConfig>(sql);
+        }
+
         /// <summary>
         /// 获取数据库中的表和试图
         /// </summary>
@@ -288,7 +328,53 @@ namespace FormDesign
         /// <returns></returns>
         public string GetFormTableName(int formId)
         {
-            return DB.FirstOrDefault<string>("SELECT TableName FROM dbo.FormConfig WHERE Id=0", formId);
+            return DB.FirstOrDefault<string>("SELECT TableName FROM dbo.FormConfig WHERE Id=@0", formId);
+        }
+        #endregion
+
+
+        #region 验证配置
+        public Sql GetValidationProfileSql()
+        {
+            Sql sql = new Sql();
+            sql.Append(" SELECT * FROM  ValidationProfile a");
+            return sql;
+        }
+
+        /// <summary>
+        /// 验证配置列表
+        /// </summary>
+        /// <returns></returns>
+        public IList<ValidationProfile> GetValidationProfile()
+        {
+            Sql sql = GetValidationProfileSql();
+            sql.OrderBy("a.Id desc ");
+            return DB.Fetch<ValidationProfile>(sql);
+        }
+
+        /// <summary>
+        /// 验证配置分页列表
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        public Page<ValidationProfile> GetValidationProfile(int pageIndex, int pageSize)
+        {
+            Sql sql = GetValidationProfileSql();
+            sql.OrderBy("a.Id desc ");
+            return DB.Page<ValidationProfile>(pageIndex, pageSize, sql);
+        }
+
+        /// <summary>
+        /// 验证配置
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ValidationProfile GetValidationProfile(int id)
+        {
+            Sql sql = GetValidationProfileSql();
+            sql.Where("a.Id=@0", id);
+            return DB.FirstOrDefault<ValidationProfile>(sql);
         }
         #endregion
     }

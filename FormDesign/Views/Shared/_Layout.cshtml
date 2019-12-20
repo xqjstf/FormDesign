@@ -14,7 +14,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>Dashboard Template for Bootstrap</title>
+    @*<title>Dashboard Template for Bootstrap</title>*@
+    <title>@("表单设计-"+ViewBag.Title)</title>
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
@@ -82,8 +83,8 @@
                     <li class="@(Request.Url.PathAndQuery.Contains("FieldConfig")?"active":"")">
                         <a href="@Url.Action("FieldConfig")">表单字段配置</a>
                     </li>
-                    <li class="@(Request.Url.PathAndQuery.Contains("FieldConfig")?"active":"")">
-                        <a href="@Url.Action("FieldConfig")">验证规则配置</a>
+                    <li class="@(Request.Url.PathAndQuery.Contains("ValidationProfile")?"active":"")">
+                        <a href="@Url.Action("ValidationProfile")">验证规则配置</a>
                     </li>
                 </ul>
             </div>
